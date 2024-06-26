@@ -1,0 +1,34 @@
+services:
+
+  postgres-iinve:
+    image: postgres:16
+    container_name: postgres-iinve-container
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: iinve_db
+      POSTGRES_USER: iinve_product
+      POSTGRES_PASSWORD: iinve_product123
+    volumes:
+      - postgres_iinve_data:/var/lib/postgresql/data
+
+  iinve-backend:
+    build:
+      context: ./invite-backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./invite-backend:/invite-backend
+      - ./invite-backend/entrypoint.sh:/invite-backend/entrypoint.sh
+    image: iinve-backend:latest
+    container_name: iinve-backend
+    # command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    # command: sh -c "uvicorn iinve-backend.main:app --host 0.0.0.0 --port 8000"
+    command: sh -c "chmod +x ./entrypoint.sh && sh ./entrypoint.sh"
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres-iinve
+
+
+volumes:
+  postgres_iinve_data:
