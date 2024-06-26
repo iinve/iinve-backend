@@ -120,8 +120,6 @@ pydantic_schema/
 *.log
 docker-compose.override.yml
 .dockerignore
-Dockerfile*
-!Dockerfile  # Allow this file
 
 # Static Files
 staticfiles/
